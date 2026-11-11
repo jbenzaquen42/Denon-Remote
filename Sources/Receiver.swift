@@ -264,6 +264,11 @@ final class Receiver: ObservableObject {
         if value == "END" {
             return
         }
+        // The receiver reports surround back twice: first whether it exists (NON/SMA/LAR),
+        // then how many it would use (1SP/2SP). Only the first line says it is present.
+        if rawKey == "SSSPCSBK" && (value == "1SP" || value == "2SP") {
+            return
+        }
         var key = rawKey
         if Receiver.dualKeys.contains(rawKey) && (value == "ON" || value == "OFF") {
             key = rawKey + "#"
