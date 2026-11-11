@@ -6,9 +6,8 @@ struct LevelsView: View {
     var body: some View {
         NavigationStack {
             List {
-                Section {
-                    StatusBar()
-                }
+                Group {
+                StatusSection()
 
                 Section {
                     ToggleRow(title: "Dialog level adjust", key: "PSDIL#", on: "PSDIL ON", off: "PSDIL OFF")
@@ -85,7 +84,10 @@ struct LevelsView: View {
                         plus: { r.send("PSTRE UP") }
                     )
                 }
+                }
+                .listRowBackground(Theme.card)
             }
+            .themedList()
             .navigationTitle("Levels")
             .navigationBarTitleDisplayMode(.inline)
         }

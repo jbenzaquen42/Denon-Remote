@@ -5,6 +5,10 @@ struct DenonRemoteApp: App {
     @StateObject private var receiver = Receiver()
     @Environment(\.scenePhase) private var scenePhase
 
+    init() {
+        Theme.applyBars()
+    }
+
     var body: some Scene {
         WindowGroup {
             TabView {
@@ -20,6 +24,7 @@ struct DenonRemoteApp: App {
                     .tabItem { Label("Backend", systemImage: "terminal") }
             }
             .environmentObject(receiver)
+            .tint(Theme.accent)
             .preferredColorScheme(.dark)
             .onChange(of: scenePhase) { phase in
                 // The receiver's control port is shared with other tools (Evo32, scripts),

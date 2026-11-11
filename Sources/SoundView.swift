@@ -6,9 +6,8 @@ struct SoundView: View {
     var body: some View {
         NavigationStack {
             List {
-                Section {
-                    StatusBar()
-                }
+                Group {
+                StatusSection()
 
                 Section("Audyssey") {
                     PickRow(title: "MultEQ", key: "PSMULTEQ:", choices: [
@@ -121,7 +120,10 @@ struct SoundView: View {
                         Choice(label: "120 min", value: "120", command: "SLP120")
                     ])
                 }
+                }
+                .listRowBackground(Theme.card)
             }
+            .themedList()
             .navigationTitle("Sound")
             .navigationBarTitleDisplayMode(.inline)
         }

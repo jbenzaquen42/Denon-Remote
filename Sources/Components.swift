@@ -9,26 +9,35 @@ struct StepRow: View {
     let plus: () -> Void
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 10) {
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
                 if let detail = detail {
                     Text(detail).font(.caption).foregroundStyle(.secondary)
                 }
             }
-            Spacer()
+            Spacer(minLength: 4)
             Text(value)
                 .font(.body.monospacedDigit().weight(.semibold))
-                .frame(minWidth: 78, alignment: .trailing)
-            Button(action: minus) {
-                Image(systemName: "minus.circle.fill").font(.title2)
+                .foregroundStyle(Theme.accent)
+                .lineLimit(1)
+                .frame(minWidth: 76, alignment: .trailing)
+            Button {
+                Haptics.tap()
+                minus()
+            } label: {
+                Image(systemName: "minus")
             }
-            .buttonStyle(.borderless)
-            Button(action: plus) {
-                Image(systemName: "plus.circle.fill").font(.title2)
+            .buttonStyle(RoundKeyStyle(size: 36))
+            Button {
+                Haptics.tap()
+                plus()
+            } label: {
+                Image(systemName: "plus")
             }
-            .buttonStyle(.borderless)
+            .buttonStyle(RoundKeyStyle(size: 36))
         }
+        .padding(.vertical, 2)
     }
 }
 
@@ -79,7 +88,11 @@ struct PickRow: View {
                     }
                 }
             } label: {
-                Text(currentLabel).foregroundStyle(.tint)
+                HStack(spacing: 4) {
+                    Text(currentLabel)
+                    Image(systemName: "chevron.up.chevron.down").font(.caption2)
+                }
+                .foregroundStyle(Theme.accent)
             }
         }
     }
@@ -106,31 +119,29 @@ struct InfoRow: View {
     }
 }
 
-struct StatusBar: View {
+/// Appears at the top of a page only while the receiver is not connected.
+struct StatusSection: View {
     @EnvironmentObject var r: Receiver
 
     var body: some View {
-        HStack(spacing: 8) {
-            Circle()
-                .fill(color)
-                .frame(width: 9, height: 9)
-            Text(r.status.label)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .lineLimit(1)
-            Spacer()
-            if r.status != .connected && r.status != .connecting {
-                Button("Connect") { r.connect() }
-                    .font(.caption)
+        if r.status != .connected {
+            Section {
+                HStack(spacing: 10) {
+                    Circle()
+                        .fill(r.status == .connecting ? Color.yellow : Theme.warn)
+                        .frame(width: 9, height: 9)
+                    Text(r.status.label)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                    Spacer()
+                    if r.status != .connecting {
+                        Button("Connect") { r.connect() }
+                            .font(.footnote.weight(.semibold))
+                            .buttonStyle(.borderless)
+                    }
+                }
             }
-        }
-    }
-
-    private var color: Color {
-        switch r.status {
-        case .connected: return .green
-        case .connecting: return .yellow
-        default: return .red
         }
     }
 }

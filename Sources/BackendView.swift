@@ -23,6 +23,7 @@ struct BackendView: View {
                     LiveLog()
                 }
             }
+            .background(Theme.background.ignoresSafeArea())
             .navigationTitle("Backend")
             .navigationBarTitleDisplayMode(.inline)
         }
@@ -40,9 +41,8 @@ private struct CalibrationList: View {
 
     var body: some View {
         List {
-            Section {
-                StatusBar()
-            }
+            Group {
+            StatusSection()
 
             Section {
                 ForEach(r.channels, id: \.self) { ch in
@@ -67,7 +67,10 @@ private struct CalibrationList: View {
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
+            }
+            .listRowBackground(Theme.card)
         }
+        .themedList()
     }
 
     private var present: [(String, String)] {
@@ -193,10 +196,10 @@ private struct LiveLog: View {
 
     private func color(_ kind: LogLine.Kind) -> Color {
         switch kind {
-        case .sent: return .blue
+        case .sent: return Color(red: 0.45, green: 0.72, blue: 1.0)
         case .received: return .primary
-        case .changed: return .yellow
-        case .blocked: return .red
+        case .changed: return Theme.accent
+        case .blocked: return Theme.warn
         }
     }
 }
